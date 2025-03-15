@@ -1,26 +1,36 @@
+import './App.css'
+
+import { useContext, useEffect } from 'react'
 import { BiCopy, BiMicrophone, BiTransfer, BiVolumeFull, } from 'react-icons/bi'
 
-import './App.css'
-import { useState } from 'react'
-
+import { TranslateContext } from './context/TranslateContext'
 import { countries } from './data/countries'
+
 import { useTranslate } from './hooks/useTranslate'
 import { useVoice } from './hooks/useVoice'
 import { useMicrophone } from './hooks/useMicrophone'
 
+
 function App() {
 
-  const BrowserLanguage = navigator.language ||
-    navigator.languages[0] || navigator.languages[2]
+  const {
+    langFrom,
+    setLangFrom,
+    langTo,
+    setLangTo,
+    textFrom,
+    setTextFrom,
+    textTo,
+    setTextTo
+  } = useContext(TranslateContext)
 
-  const [textFrom, setTextFrom] = useState("")
-  const [textTo, setTextTo] = useState("")
-  const [langFrom, setLangFrom] = useState(BrowserLanguage)
-  const [langTo, setLangTo] = useState("en-GB")
+  useEffect(() => {
+    console.log("pick")
+  }, [])
 
   const { getTanslation } = useTranslate()
   const { command } = useVoice()
-  const { handleMicrofone, listining, recognition } = useMicrophone()
+  const { handleMicrofone, listining } = useMicrophone()
 
 
   async function handleTranslate() {
@@ -42,7 +52,7 @@ function App() {
           <div className='grid sm:grid-cols-2  gap-px  p-2rounded'>
 
             <div>
-              {/* Area write */}
+              {/* From */}
               <textarea
                 name=""
                 id=""
@@ -57,14 +67,9 @@ function App() {
                   defaultValue={langFrom}
                   onChange={(e) => {
                     setLangFrom(e.target.value)
-                    console.log(e.target.value)
-                    recognition.lang = e.target.value
                   }} name="from-lang" id="from-lang" className='p-px pl-2 rounded outline-none w-32 bg-white border border-zinc-300 hover:bg-slate-100'>
                   {
                     countries.map((item => {
-                      // if (item.code === BrowserLanguage) {
-                      //   return <option value={item.code} key={item.code} selected >{item.name}</option>
-                      // }
                       return <option value={item.code} key={item.code}>{item.name}</option>
                     }))
                   }
@@ -101,10 +106,8 @@ function App() {
 
             </div>
 
-
-
             <div>
-              {/* Area write */}
+              {/* To */}
               <textarea
                 name=""
                 id=""
@@ -156,10 +159,13 @@ function App() {
             <div className='flex justify-center'>
               <button
                 onClick={() => {
-                  const tfrom = textFrom
-                  const tto = textTo
-                  setTextFrom(tto)
-                  setTextTo(tfrom)
+                  // const tfrom = textFrom
+                  // const tto = textTo
+                  // setTextFrom(tto)
+                  // setTextTo(tfrom)
+
+                  setTextFrom(textTo)
+                  setTextTo(textFrom)
 
                   const lfrom = langFrom
                   const lto = langTo
@@ -170,8 +176,6 @@ function App() {
                   document.querySelector("#to-lang").value = lfrom
                   document.querySelector("#from-lang").value = lto
 
-                  console.log(lfrom)
-                  console.log(lto)
                 }}
                 className='rounded-sm text-sm p-2 bg-white border border-zinc-300 hover:bg-slate-100'
 

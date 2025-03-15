@@ -1,9 +1,15 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
+
+import { TranslateContext } from "../context/TranslateContext"
 
 export function useMicrophone() {
 
     const [listining, setListining] = useState(false)
     const [text, setText] = useState("")
+
+    const {
+        setTextFrom,
+    } = useContext(TranslateContext)
 
     const speechRecognition = window.SpeechRecognition
         || window.webkitSpeechRecognition
@@ -32,7 +38,7 @@ export function useMicrophone() {
         console.log(recognition)
         console.log(e.results[0][0].transcript)
         console.log("Transcrevendo")
-        setText(e.results[0][0].transcript)
+        setTextFrom(e.results[0][0].transcript)
     }
 
     function handleMicrofone() {
